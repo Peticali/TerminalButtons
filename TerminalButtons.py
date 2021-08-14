@@ -12,7 +12,7 @@ class TerminalButtons:
         #list with all objs coords (first char,last,height)
         self.Buttons[str(self.countObj)] = [aa,ab,h,c]
 
-    def CreateButton(self,positionx='left',positiony='center',bg=curses.COLOR_WHITE,fg=curses.COLOR_BLACK,commmand=None,text='test',row=0,col=0):
+    def CreateButton(self,positionx='left',positiony='top',bg=curses.COLOR_WHITE,fg=curses.COLOR_BLACK,commmand=None,text='test',row=0,col=0):
         curses.init_pair(self.countObj, fg, bg)
 
         hm, wm = self.std.getmaxyx()
