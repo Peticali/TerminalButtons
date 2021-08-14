@@ -52,15 +52,12 @@ class TerminalButtons:
         return input 
 
     def mainLoop(self):
-        debug = False
         while self.running:
             self.std.refresh()
             key = self.std.getch()
 
             if key == curses.KEY_MOUSE:
                 _, x, y, _, _ = curses.getmouse()
-
-                if debug: self.CreateButton(color=curses.COLOR_MAGENTA,text=str(self.Buttons['1'])+'%i %i' % (x,y))
                 
                 buttons = self.Buttons
                 try:
@@ -94,6 +91,7 @@ class TerminalButtons:
 
 
 if __name__ == '__main__':
+    
     def main(stdscr):
 
         Tb = TerminalButtons(stdscr)
@@ -102,9 +100,9 @@ if __name__ == '__main__':
         Tb.CreateButton(positiony=TOP,positionx=CENTER,fg=curses.COLOR_BLUE,text='top',commmand=Tb.ClearScreen)
         Tb.CreateButton(positiony=BOTTOM,positionx=CENTER,fg=curses.COLOR_BLUE,text='bottom',commmand=Tb.ClearScreen)
         Tb.CreateButton(positiony=CENTER,positionx=RIGHT,fg=curses.COLOR_BLUE,text='right',commmand=Tb.ClearScreen)
-        Tb.CreateButton(positiony=CENTER,positionx=LEFT,fg=curses.COLOR_GREEN,text='left',commmand=lambda:[Tb.my_raw_input(1,1,'teste')])
+        Tb.CreateButton(positiony=CENTER,positionx=LEFT,fg=curses.COLOR_GREEN,text='left',commmand=Tb.ClearScreen)
         
-        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='Click for Input',row=2)
+        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='Click for Input',row=2,commmand=lambda:[Tb.ReqInput(1,1)])
         Tb.mainLoop()
 
     curses.wrapper(main)
