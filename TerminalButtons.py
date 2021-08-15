@@ -12,7 +12,7 @@ class TerminalButtons:
         #list with all objs coords (first char,last,height)
         self.Buttons[str(self.countObj)] = [aa,ab,h,c]
 
-    def CreateButton(self,positionx='left',positiony='top',bg=curses.COLOR_WHITE,fg=curses.COLOR_BLACK,commmand=None,text='test',row=0,col=0):
+    def CreateButton(self,positionx='left',positiony='top',fg=curses.COLOR_WHITE,bg=curses.COLOR_BLACK,commmand=None,text='test',row=0,col=0):
         curses.init_pair(self.countObj, fg, bg)
 
         hm, wm = self.std.getmaxyx()
@@ -46,10 +46,10 @@ class TerminalButtons:
         self.std.refresh()
         input = self.std.getstr(x, y)
 
-        self.CreateButton(color=curses.COLOR_CYAN,text=input)
+        #self.CreateButton(color=curses.COLOR_CYAN,text=input)
         curses.noecho()
         curses.cbreak()
-        return input 
+        return input.decode('utf-8')
 
     def mainLoop(self):
         while self.running:
@@ -77,6 +77,9 @@ class TerminalButtons:
         self.std.clear()
         self.Buttons = {}
 
+    def GetMaxYX(self):
+        return self.std.getmaxyx()
+
     def Exit(self):
         self.running = False
 
@@ -91,10 +94,20 @@ class TerminalButtons:
 
 
 if __name__ == '__main__':
-    
+    def testInput(Tb:TerminalButtons):
+        a = Tb.ReqInput(1,1)
+        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='You writed: %s' % a,row=2,commmand=lambda:[testInput(Tb)])
+
     def main(stdscr):
 
         Tb = TerminalButtons(stdscr)
+        
+        x,y = Tb.GetMaxYX()
+        a = ' '+'=' * (y-2)
+
+        Tb.CreateButton(text=a,fg=curses.COLOR_GREEN)
+        Tb.CreateButton(text=a,fg=curses.COLOR_GREEN,positiony=BOTTOM)
+
         Tb.CreateButton(positiony=CENTER,positionx=CENTER,fg=curses.COLOR_BLUE,text='center',commmand=Tb.ClearScreen)
 
         Tb.CreateButton(positiony=TOP,positionx=CENTER,fg=curses.COLOR_BLUE,text='top',commmand=Tb.ClearScreen)
@@ -102,7 +115,7 @@ if __name__ == '__main__':
         Tb.CreateButton(positiony=CENTER,positionx=RIGHT,fg=curses.COLOR_BLUE,text='right',commmand=Tb.ClearScreen)
         Tb.CreateButton(positiony=CENTER,positionx=LEFT,fg=curses.COLOR_GREEN,text='left',commmand=Tb.ClearScreen)
         
-        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='Click for Input',row=2,commmand=lambda:[Tb.ReqInput(1,1)])
+        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='Click for Input',row=2,commmand=lambda:[testInput(Tb)])
         Tb.mainLoop()
 
     curses.wrapper(main)
