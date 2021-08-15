@@ -12,7 +12,7 @@ class TerminalButtons:
         #list with all objs coords (first char,last,height)
         self.Buttons[str(self.countObj)] = [aa,ab,h,c]
 
-    def CreateButton(self,positionx='left',positiony='top',fg=curses.COLOR_WHITE,bg=curses.COLOR_BLACK,commmand=None,text='test',row=0,col=0):
+    def CreateButton(self,positionx='left',positiony='top',fg=curses.COLOR_WHITE,bg=curses.COLOR_BLACK,commmand=None,text='test',row=0,col=0,typeText=curses.A_CHARTEXT):
         curses.init_pair(self.countObj, fg, bg)
 
         hm, wm = self.std.getmaxyx()
@@ -32,9 +32,9 @@ class TerminalButtons:
             h = hm - 1 + row
 
             
-        self.std.attron(curses.color_pair(self.countObj))
+        self.std.attron(curses.color_pair(self.countObj) | typeText)
         self.std.addstr(h, w, text)
-        self.std.attroff(curses.color_pair(self.countObj))
+        self.std.attroff(curses.color_pair(self.countObj) | typeText)
 
         finalt = w + len(text)
         self.assignList(w,finalt,h,commmand)
@@ -50,6 +50,11 @@ class TerminalButtons:
         curses.noecho()
         curses.cbreak()
         return input.decode('utf-8')
+
+    def ConfigureBg(self,bg=curses.COLOR_BLUE,fg=curses.COLOR_WHITE):
+        curses.init_pair(self.countObj, fg, bg)
+        self.std.bkgd(' ', curses.color_pair(self.countObj) )
+        self.countObj = self.countObj + 1
 
     def mainLoop(self):
         while self.running:
@@ -96,26 +101,30 @@ class TerminalButtons:
 if __name__ == '__main__':
     def testInput(Tb:TerminalButtons):
         inputs = Tb.ReqInput(1,1)
+        Tb.ConfigureBg()
         Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='You writed: %s' % inputs,row=2,commmand=lambda:[testInput(Tb)])
 
     def main(stdscr):
 
         Tb = TerminalButtons(stdscr)
         
-        x,y = Tb.GetMaxYX()
-        a = ' '+'=' * (y-2)
-
+        y = Tb.GetMaxYX()[1]
+        a = ' ' + '=' * (y-2)
         Tb.CreateButton(text=a,fg=curses.COLOR_GREEN)
         Tb.CreateButton(text=a,fg=curses.COLOR_GREEN,positiony=BOTTOM)
 
-        Tb.CreateButton(positiony=CENTER,positionx=CENTER,fg=curses.COLOR_BLUE,text='center',commmand=Tb.ClearScreen)
+        Tb.CreateButton(text='blink',fg=curses.COLOR_GREEN,positiony=BOTTOM,positionx=CENTER,typeText=curses.A_BLINK,row=-1)
+        Tb.CreateButton(text='bold',fg=curses.COLOR_GREEN,positiony=TOP,positionx=CENTER,typeText=curses.A_BOLD,row=1)
 
-        Tb.CreateButton(positiony=TOP,positionx=CENTER,fg=curses.COLOR_BLUE,text='top',commmand=Tb.ClearScreen)
-        Tb.CreateButton(positiony=BOTTOM,positionx=CENTER,fg=curses.COLOR_BLUE,text='bottom',commmand=Tb.ClearScreen)
-        Tb.CreateButton(positiony=CENTER,positionx=RIGHT,fg=curses.COLOR_BLUE,text='right',commmand=Tb.ClearScreen)
-        Tb.CreateButton(positiony=CENTER,positionx=LEFT,fg=curses.COLOR_GREEN,text='left',commmand=Tb.ClearScreen)
+        Tb.CreateButton(positiony=CENTER,positionx=CENTER,fg=curses.COLOR_BLUE,text='center')
+        Tb.CreateButton(positiony=TOP,positionx=CENTER,fg=curses.COLOR_BLUE,text='top')
+        Tb.CreateButton(positiony=BOTTOM,positionx=CENTER,fg=curses.COLOR_BLUE,text='bottom')
+        Tb.CreateButton(positiony=CENTER,positionx=RIGHT,fg=curses.COLOR_BLUE,text='right')
+        Tb.CreateButton(positiony=CENTER,positionx=LEFT,fg=curses.COLOR_BLUE,text='left')
         
         Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='Click for Input',row=2,commmand=lambda:[testInput(Tb)])
+        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_RED,text='Clear',row=3,commmand=Tb.ClearScreen)
+
         Tb.mainLoop()
 
     curses.wrapper(main)
