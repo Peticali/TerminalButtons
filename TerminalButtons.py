@@ -51,6 +51,10 @@ class TerminalButtons:
         curses.cbreak()
         return input.decode('utf-8')
 
+    def AddKeyEvent(self,key,func):
+        self.events[str(self.countObj)] = [key,func]
+        self.countObj = self.countObj + 1
+
     def ConfigureBg(self,bg=curses.COLOR_BLUE,fg=curses.COLOR_WHITE):
         curses.init_pair(self.countObj, fg, bg)
         self.std.bkgd(' ', curses.color_pair(self.countObj) )
@@ -60,6 +64,11 @@ class TerminalButtons:
         while self.running:
             self.std.refresh()
             key = self.std.getch()
+
+            for j in self.events:
+                event = self.events[j]
+                if event[0] == key:
+                    event[1]()
 
             if key == curses.KEY_MOUSE:
                 _, x, y, _, _ = curses.getmouse()
@@ -91,6 +100,7 @@ class TerminalButtons:
     def __init__(self,std,cursor=0):
         self.Buttons = {}
         self.countObj = 1
+        self.events = {}
         self.std = std
         self.running = True
         curses.curs_set(cursor)
@@ -104,9 +114,13 @@ if __name__ == '__main__':
         Tb.ConfigureBg()
         Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='You writed: %s' % inputs,row=2,commmand=lambda:[testInput(Tb)])
 
+    def EventTest(Tb:TerminalButtons):
+        Tb.CreateButton(text='You pressed KeyUp',fg=curses.COLOR_GREEN)
+
     def main(stdscr):
 
         Tb = TerminalButtons(stdscr)
+        Tb.AddKeyEvent(curses.KEY_UP,lambda:EventTest(Tb))
         
         y = Tb.GetMaxYX()[1]
         a = ' ' + '=' * (y-2)
