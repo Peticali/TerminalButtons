@@ -3,9 +3,11 @@ Python curses made easy
 
 Clicable Buttons in Linux terminal, Termux, etc
 
+![Captura de Tela 2021-08-15 às 08 03 05](https://user-images.githubusercontent.com/34588988/129476983-85d7be6c-b261-428f-977c-3149e975d35f.png)
 
 
 
+Example:
 ```python
 from TerminalButtons import *
 import curses
