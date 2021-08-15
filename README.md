@@ -11,8 +11,9 @@ from TerminalButtons import *
 import curses
 
 def example(std):
-  Tb = TerminalButtons(std)
-  Tb.CreateButton(positiony=CENTER,positionx=CENTER,fg=curses.COLOR_BLUE,text='hi')
+    Tb = TerminalButtons(std)
+    Tb.CreateButton(positiony=CENTER,positionx=CENTER,fg=curses.COLOR_BLUE,text='hi')
+    Tb.mainLoop()
 
 curses.wrapper(example)
 ```
