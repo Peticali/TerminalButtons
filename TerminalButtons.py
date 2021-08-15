@@ -95,8 +95,8 @@ class TerminalButtons:
 
 if __name__ == '__main__':
     def testInput(Tb:TerminalButtons):
-        a = Tb.ReqInput(1,1)
-        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='You writed: %s' % a,row=2,commmand=lambda:[testInput(Tb)])
+        inputs = Tb.ReqInput(1,1)
+        Tb.CreateButton(positionx=CENTER,positiony=CENTER,bg=curses.COLOR_GREEN,text='You writed: %s' % inputs,row=2,commmand=lambda:[testInput(Tb)])
 
     def main(stdscr):
 
