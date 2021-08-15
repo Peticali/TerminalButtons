@@ -29,6 +29,7 @@ CreateButton(self,positionx,positiony,fg,bg,commmand,text,row,col,typeText)
 
 ReqInput(self,x,y)
 #x,y = coords where input will show up
+#returns the string typed
 
 AddKeyEvent(self,key,func)
 #key = curses KEY
@@ -38,12 +39,15 @@ ConfigureBg(self,bg,fg)
 #bg,fg = curses COLOR (will change the screen colors)
 
 mainLoop(self)
+#principal loop
 
 ClearScreen(self)
+#i need to document this?
 
 GetMaxYX(self)
 #returns the char size of terminal (x,y)
 
 Exit(self)
+#breaks the mainLoop and exit
 ```
 
